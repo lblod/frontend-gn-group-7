@@ -771,3 +771,14 @@ zitting-link:
 generic:
   edit: Edit
   add: Add
+
+cycling-plugin:
+  insert-cycling-decision: Insert cycling decision
+  days: days
+  modalTitle: Select Cycling Event
+  fields:
+    date: Date
+    name: Name
+    organizer: Organizer
+    insert: Insert
+    daysTillDeadline: Days Left
