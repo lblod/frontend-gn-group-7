@@ -14,22 +14,54 @@ import { AdministrativeUnit } from '@lblod/ember-rdfa-editor-lblod-plugins/plugi
 
 const MockData = [
   {
-    date: new Date(),
-    name: "Giro d'Italia",
-    organizer: 'Some Italian Guy',
+    name: 'The big cycling race',
+    requestUri: 'http://data.lblod.info/aanvragen/1',
+    organizerUri: 'http://data.lblod.info/organisaties/1',
+    organizerName: 'Lily Lefèvre',
+    organizerAddress: 'Edingensesteenweg 28, 1500, Halle',
+    locations: [
+      {
+        uri: 'http://data.lblod.info/zones/1',
+        name: 'het Citadelpark',
+        geometry:
+          'POLYGON((3.7168937735259537 51.03662243938447,3.718567304313183 51.037647059502746,3.7197848595678806 51.03666133741382,3.7188588269054894 51.035874515640955,3.7168937735259537 51.03662243938447))',
+      },
+      {
+        uri: 'http://data.lblod.info/zones/2',
+        name: 'omgeving in Gent',
+        geometry:
+          'LINESTRING(3.7244438210622612 51.03874007628664,3.7204485534162512 51.034672704529555,3.719244678836533 51.029355633627205,3.7121200278422886 51.026144539610016,3.7091498567154004 51.021152279963815)',
+      },
+    ],
+    activityDate: '20/11/2024',
+    activityStart: '18/11/2024',
+    activityEnd: '22/11/2024',
     daysTillDeadline: 20,
   },
   {
-    date: new Date(),
-    name: 'Tour de France',
-    organizer: 'Some Frech Guy',
+    name: 'Race against ALS',
+    requestUri: 'http://data.lblod.info/aanvragen/2',
+    organizerUri: 'http://data.lblod.info/organisaties/2',
+    organizerName: 'Lily Lefèvre',
+    organizerAddress: 'Brusselstraat 64, 1702, Groot Bijgaarden',
+    locations: [
+      {
+        uri: 'http://data.lblod.info/zones/1',
+        name: 'het Citadelpark',
+        geometry:
+          'POLYGON((3.7168937735259537 51.03662243938447,3.718567304313183 51.037647059502746,3.7197848595678806 51.03666133741382,3.7188588269054894 51.035874515640955,3.7168937735259537 51.03662243938447))',
+      },
+      {
+        uri: 'http://data.lblod.info/zones/2',
+        name: 'omgeving in Gent',
+        geometry:
+          'LINESTRING(3.7244438210622612 51.03874007628664,3.7204485534162512 51.034672704529555,3.719244678836533 51.029355633627205,3.7121200278422886 51.026144539610016,3.7091498567154004 51.021152279963815)',
+      },
+    ],
+    activityDate: '15/12/2024',
+    activityStart: '13/12/2024',
+    activityEnd: '17/12/2024',
     daysTillDeadline: 50,
-  },
-  {
-    date: new Date(),
-    name: 'La vuelta España',
-    organizer: 'Some Spanish Guy',
-    daysTillDeadline: 100,
   },
 ];
 

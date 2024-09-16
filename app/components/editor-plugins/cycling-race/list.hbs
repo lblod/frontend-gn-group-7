@@ -41,9 +41,9 @@
       {{#if @services.value.totalCount}}
         {{#each @services.value.results as |row|}}
           <tr>
-            <td>{{human-friendly-date row.date}}</td>
+            <td>{{row.activityDate}}</td>
             <td>{{row.name}}</td>
-            <td>{{row.organizer}}</td>
+            <td>{{row.organizerName}}</td>
             <td>
               <EditorPlugins::CyclingRace::DeadlinePill
                 @daysTillDeadline={{row.daysTillDeadline}}
