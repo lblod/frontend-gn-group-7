@@ -1,5 +1,11 @@
 # frontend-gelinkt-notuleren
 
+## 5.28.0
+
+### Minor Changes
+
+- [`57c96d0`](https://github.com/lblod/frontend-gelinkt-notuleren/commit/57c96d07933b6dd56aead6a8d9a66b4adf32e6dc) Thanks [@lagartoverde](https://github.com/lagartoverde)! - Added cycling race plugin
+
 ## 5.27.2
 
 ### Patch Changes
