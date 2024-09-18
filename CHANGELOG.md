@@ -1,5 +1,11 @@
 # frontend-gelinkt-notuleren
 
+## 5.28.1
+
+### Patch Changes
+
+- Fixed bugs for cycling plugin and connected it to the backend
+
 ## 5.28.0
 
 ### Minor Changes
