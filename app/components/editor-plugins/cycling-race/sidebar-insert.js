@@ -49,10 +49,8 @@ function generateHtml({
   organizerName,
   organizerAddress,
   locations,
-  activityDate,
-  activityStart,
-  activityEnd,
-  zones,
+  dateStart,
+  dateEnd,
 }) {
   return `<div property="prov:generated" resource="http://data.lblod.info/id/besluiten/\${generateUuid()}"
   typeof="besluit:Besluit ext:BesluitNieuweStijl https://data.vlaanderen.be/id/concept/BesluitType/e96ec8af-6480-4b32-876a-fefe5f0a3793">
@@ -102,9 +100,9 @@ function generateHtml({
                     resource="${organizerUri}">${organizerName}</span>, ${organizerAddress}, het gebruik van
                     ${generateLocations(locations)} toe te staan op <span
                     property="https://data.vlaanderen.be/ns/omgevingsvergunning#Activiteit.tijdsbestek"
-                    typeof="time:Interval">${activityDate} - met start opbouw op <span property="time:hasBeginning"
-                        typeof="time:Instant"><span property="time:inXSDDateTime">${activityStart}</span></span> en einde afbouw op
-                    <span property="time:hasEnd" typeof="time:Instant"><span property="time:inXSDDateTime">${activityEnd}</span>
+                    typeof="time:Interval">${dateStart.toLocaleDateString('nl-BE')} - met start opbouw op <span property="time:hasBeginning"
+                        typeof="time:Instant"><span property="time:inXSDDateTime">${dateStart.toLocaleDateString('nl-BE')}</span></span> en einde afbouw op
+                    <span property="time:hasEnd" typeof="time:Instant"><span property="time:inXSDDateTime">${dateEnd.toLocaleDateString('nl-BE')}</span>
                     </span> - zoals opgenomen in bijgevoegd plan en mits naleving van de voorwaarden geformuleerd in het bij
                     dit besluit gevoegde document.
                     </span>
