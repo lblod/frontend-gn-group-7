@@ -1,5 +1,11 @@
 # frontend-gelinkt-notuleren
 
+## 5.28.2
+
+### Patch Changes
+
+- Changed wrong prefix on cycling plugin query
+
 ## 5.28.1
 
 ### Patch Changes
