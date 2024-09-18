@@ -1,5 +1,11 @@
 # frontend-gelinkt-notuleren
 
+## 5.28.3
+
+### Patch Changes
+
+- Fix dates on besluit template
+
 ## 5.28.2
 
 ### Patch Changes
