@@ -120,7 +120,7 @@ const query = `
   PREFIX dct: <http://purl.org/dc/terms/>
   PREFIX dossier: <https://data.vlaanderen.be/ns/dossier#>
   PREFIX mu: <http://mu.semte.ch/vocabularies/core/>
-  PREFIX omgeving: <https://data.vlaanderen.be/ns/omgeving#>
+  PREFIX omgeving: <https://data.vlaanderen.be/ns/omgevingsvergunning#>
   PREFIX time: <http://www.w3.org/2006/time#>
   PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
   PREFIX locn: <http://www.w3.org/ns/locn#>
