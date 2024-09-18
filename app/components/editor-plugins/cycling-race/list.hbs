@@ -41,7 +41,7 @@
       {{#if @services.value.totalCount}}
         {{#each @services.value.results as |row|}}
           <tr>
-            <td>{{row.activityDate}}</td>
+            <td>{{human-friendly-date row.dateStart}}</td>
             <td>{{row.name}}</td>
             <td>{{row.organizerName}}</td>
             <td>

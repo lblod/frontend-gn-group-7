@@ -11,61 +11,9 @@ import {
   WorshipService,
 } from '@lblod/ember-rdfa-editor-lblod-plugins/plugins/worship-plugin/utils/fetchWorshipServices';
 import { AdministrativeUnit } from '@lblod/ember-rdfa-editor-lblod-plugins/plugins/worship-plugin';
+import { executeQuery } from '@lblod/ember-rdfa-editor-lblod-plugins/utils/sparql-helpers';
 
-const MockData = [
-  {
-    name: 'The big cycling race',
-    requestUri: 'http://data.lblod.info/aanvragen/1',
-    organizerUri: 'http://data.lblod.info/organisaties/1',
-    organizerName: 'Lily Lefèvre',
-    organizerAddress: 'Edingensesteenweg 28, 1500, Halle',
-    locations: [
-      {
-        uri: 'http://data.lblod.info/zones/1',
-        name: 'het Citadelpark',
-        geometry:
-          'POLYGON((3.7168937735259537 51.03662243938447,3.718567304313183 51.037647059502746,3.7197848595678806 51.03666133741382,3.7188588269054894 51.035874515640955,3.7168937735259537 51.03662243938447))',
-      },
-      {
-        uri: 'http://data.lblod.info/zones/2',
-        name: 'omgeving in Gent',
-        geometry:
-          'LINESTRING(3.7244438210622612 51.03874007628664,3.7204485534162512 51.034672704529555,3.719244678836533 51.029355633627205,3.7121200278422886 51.026144539610016,3.7091498567154004 51.021152279963815)',
-      },
-    ],
-    activityDate: '20/11/2024',
-    activityStart: '18/11/2024',
-    activityEnd: '22/11/2024',
-    daysTillDeadline: 20,
-  },
-  {
-    name: 'Race against ALS',
-    requestUri: 'http://data.lblod.info/aanvragen/2',
-    organizerUri: 'http://data.lblod.info/organisaties/2',
-    organizerName: 'Lily Lefèvre',
-    organizerAddress: 'Brusselstraat 64, 1702, Groot Bijgaarden',
-    locations: [
-      {
-        uri: 'http://data.lblod.info/zones/1',
-        name: 'het Citadelpark',
-        geometry:
-          'POLYGON((3.7168937735259537 51.03662243938447,3.718567304313183 51.037647059502746,3.7197848595678806 51.03666133741382,3.7188588269054894 51.035874515640955,3.7168937735259537 51.03662243938447))',
-      },
-      {
-        uri: 'http://data.lblod.info/zones/2',
-        name: 'omgeving in Gent',
-        geometry:
-          'LINESTRING(3.7244438210622612 51.03874007628664,3.7204485534162512 51.034672704529555,3.719244678836533 51.029355633627205,3.7121200278422886 51.026144539610016,3.7091498567154004 51.021152279963815)',
-      },
-    ],
-    activityDate: '15/12/2024',
-    activityStart: '13/12/2024',
-    activityEnd: '17/12/2024',
-    daysTillDeadline: 50,
-  },
-];
-
-export default class WorshipPluginSearchModalComponent extends Component {
+export default class CyclingRaceSearchModalComponent extends Component {
   // Filtering
   @tracked sort = false;
   @tracked inputSearchText = null;
@@ -168,9 +116,64 @@ export default class WorshipPluginSearchModalComponent extends Component {
   }
 }
 
-function fetchCyclingRaces() {
+const query = `
+  PREFIX dct: <http://purl.org/dc/terms/>
+  PREFIX dossier: <https://data.vlaanderen.be/ns/dossier#>
+  PREFIX mu: <http://mu.semte.ch/vocabularies/core/>
+  PREFIX omgeving: <https://data.vlaanderen.be/ns/omgeving#>
+  PREFIX time: <http://www.w3.org/2006/time#>
+  PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
+  PREFIX locn: <http://www.w3.org/ns/locn#>
+  select distinct ?name ?requestUri ?organizerUri ?organizerName ?dateStart ?dateEnd ?activityUri where {
+    ?zaak a dossier:Zaak ;
+          dct:title ?name .
+    ?dossier a dossier:Dossier ;
+          dossier:Dossier.isNeerslagVan ?zaak ;
+          omgeving:zaakhandeling ?requestUri .
+    ?requestUri omgeving:inhoud ?recht .
+    ?recht omgeving:voorwerp ?activityUri .
+    ?activityUri omgeving:betrokkene ?organizerUri ;
+    omgeving:Activiteit.tijdsbestek ?tijdsbestek .
+    ?organizerUri skos:prefLabel ?organizerName.
+    ?tijdsbestek a time:Interval ;
+            time:hasBeginning ?dateStart ;
+            time:hasEnd ?dateEnd.
+  }
+
+`;
+
+async function fetchCyclingRaces() {
+  const data = await executeQuery({
+    query,
+    endpoint: 'https://cycling-org.hackathon-7.s.redhost.be/sparql',
+  });
+  const cyclingRaces = data.results.bindings.map(createCyclingRace);
+  //TODO create pagination
   return {
-    results: MockData,
-    totalCount: 3,
+    results: cyclingRaces,
+    totalCount: cyclingRaces.length,
   };
+}
+
+function createCyclingRace(bindings) {
+  return {
+    name: bindings.name.value,
+    organizerName: bindings.organizerName.value,
+    organizerUri: bindings.organizerUri.value,
+    requestUri: bindings.requestUri.value,
+    dateStart: new Date(bindings.dateStart.value),
+    dateEnd: new Date(bindings.dateEnd.value),
+    daysTillDeadline: getDiffDays(
+      new Date(bindings.dateStart.value),
+      new Date(),
+    ),
+    activityUri: bindings.activityUri.value,
+  };
+}
+
+function getDiffDays(date1, date2) {
+  const diffTime = date2 - date1;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  if (diffDays < 0) return 0;
+  return diffDays;
 }

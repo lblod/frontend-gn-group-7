@@ -3,7 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { assert } from '@ember/debug';
 import { action } from '@ember/object';
 
-export default class WorshipPluginSearchModalComponent extends Component {
+export default class DeadlinePill extends Component {
   get skin() {
     if (this.args.daysTillDeadline >= 100) {
       return 'success';

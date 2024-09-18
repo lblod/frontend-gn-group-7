@@ -9,7 +9,8 @@ import {
   RDF,
 } from '@lblod/ember-rdfa-editor-lblod-plugins/utils/constants';
 import { insertHtml } from '@lblod/ember-rdfa-editor/commands/insert-html-command';
-export default class RegulatoryStatementsSidebarInsertComponent extends Component {
+import { executeQuery } from '@lblod/ember-rdfa-editor-lblod-plugins/utils/sparql-helpers';
+export default class CyclingRaceSidebarInsertComponent extends Component {
   @tracked showModal = false;
 
   get controller() {
@@ -28,9 +29,12 @@ export default class RegulatoryStatementsSidebarInsertComponent extends Componen
   }
 
   @action
-  insertCyclingRaceDecision(cyclingRaceData) {
+  async insertCyclingRaceDecision(cyclingRaceData) {
     this.modalEnabled = false;
     const { schema } = this.controller;
+    cyclingRaceData.locations = await fetchLocations(
+      cyclingRaceData.activityUri,
+    );
     const html = generateHtml(cyclingRaceData);
     this.controller.doCommand(insertHtml(html, 0, 0, undefined, false, true), {
       view: this.controller.mainEditorView,
@@ -51,7 +55,7 @@ function generateHtml({
   zones,
 }) {
   return `<div property="prov:generated" resource="http://data.lblod.info/id/besluiten/\${generateUuid()}"
-  typeof="besluit:Besluit ext:BesluitNieuweStijl">
+  typeof="besluit:Besluit ext:BesluitNieuweStijl https://data.vlaanderen.be/id/concept/BesluitType/e96ec8af-6480-4b32-876a-fefe5f0a3793">
   <p>Openbare titel besluit:</p>
   <h4 class="h4" property="eli:title" datatype="xsd:string"><span class="mark-highlight-manual">Geef titel besluit
       op</span></h4>
@@ -135,4 +139,33 @@ function generateZones(zones) {
       </div>`,
     )
     .join(' ');
+}
+
+async function fetchLocations(activityUri) {
+  const query = `
+    PREFIX omgeving: <https://data.vlaanderen.be/ns/omgeving#>
+    PREFIX geosparql: <http://www.opengis.net/ont/geosparql#>
+    PREFIX locn: <http://www.w3.org/ns/locn#>
+    select distinct ?location ?name ?geometry where {
+      <${activityUri}> omgeving:locatie ?location.
+      ?location a geosparql:Feature;
+              skos:prefLabel ?name;
+              locn:geometry ?geometry.
+    }
+  `;
+  const data = await executeQuery({
+    query,
+    endpoint: 'http://localhost:90/sparql',
+  });
+  console.log();
+  const locations = data.results.bindings.map(createLocation);
+  return locations;
+}
+
+function createLocation(bindings) {
+  return {
+    uri: bindings.location.value,
+    name: bindings.name.value,
+    geometry: bindings.geometry.value,
+  };
 }
