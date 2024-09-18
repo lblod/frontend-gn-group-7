@@ -145,7 +145,7 @@ const query = `
 async function fetchCyclingRaces() {
   const data = await executeQuery({
     query,
-    endpoint: 'https://cycling-org.hackathon-7.s.redhost.be/sparql',
+    endpoint: 'https://cycling-adm.hackathon-7.s.redhost.be/sparql',
   });
   const cyclingRaces = data.results.bindings.map(createCyclingRace);
   //TODO create pagination
